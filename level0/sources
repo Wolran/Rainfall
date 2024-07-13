@@ -1,0 +1,24 @@
+#include <stdio.h>
+
+int main(int param_1,int param_2)
+
+{
+  int iVar1;
+  int nik;
+  int first;
+  int second;
+  
+  iVar1 = atoi(*(int *)(param_2 + 4));
+  if (iVar1 == 423) {
+    first = strdup("/bin/sh");
+    nik = getegid();
+    second = geteuid();
+    setresgid(nik,nik,nik);
+    setresuid(second,second,second);
+    execv("/bin/sh",&first);
+  }
+  else {
+    fwrite("No !\n",1,5,stderr);
+  }
+  return 0;
+}

