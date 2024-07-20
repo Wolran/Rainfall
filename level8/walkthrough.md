@@ -1,8 +1,8 @@
-# Rapport CTF - [Level07]
+# Rapport CTF - [Level08]
 
 ### Observation :
 En arrivant sur le level8 on trouve un executable nommé level8.\
-Quand nous essayons de le lancer\
+Quand nous essayons de le lancer, et nous obtenons une chaine de caractere `(nil), (nil)` qui se repete des que l'on fini une string. \
 Regardons donc avec gdb ou un decompilateur.
 
 ### Explication de Code :
@@ -48,7 +48,7 @@ Ok que nous donne ce code:
 - si on fait `"login"` on regarde si auth + 8 n'est pas vide pour `/bin/sh`, sinon on ecrit `"Password:\n"` .
 
 ### Solution :
-Le but est donc de creer `auth` puis mettre de la memoire a auth+8 avec `servic` puis essayer de login pour avoir acces a un shell.
+Le but est donc de creer `auth` puis mettre de la memoire a auth+8 avec `servic` puis essayer de `login` pour avoir acces a un shell.
 
 On fait la commande suivante pour obtenir le flag :
 ```sh
