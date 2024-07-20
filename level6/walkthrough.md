@@ -1,12 +1,12 @@
 # Rapport CTF - [Level06]
 
 ### Observation :
-En arrivant sur le level6 on trouve un executable nommé level6.\
-Quand nous essayons de le lancer avec un argument le programme repond `Nope`. \
+En arrivant sur le level6 on trouve un exécutable nommé level6.\
+Quand nous essayons de le lancer avec un argument le programme répond `Nope`. \
 Regardons donc avec gdb ou un decompilateur.
 
 ### Explication de Code :
-En lancant le binaire dans hex-ray ou ghidra nous obtenons :
+En lançant le binaire dans hex-ray ou ghidra nous obtenons :
 ```c
 //----- (08048454) --------------------------------------------------------
 int n()
@@ -33,14 +33,14 @@ int __cdecl main(int argc, const char **argv, const char **envp)
   return (*v4)();
 }
 ```
-On peux voir une fonction `n()` qui permet de cat le mot de passe du prochain level
-Le but est donc d'arriver a jump sur  la fonction `n()`. \
-On peux voir aussi que nous avons 2 mallocs et un `strcpy()` (pas de `n` donc pas proteger).
+On peut voir une fonction `n()` qui permet de cat le mot de passe du prochain level
+Le but est donc d'arriver a jump sur la fonction `n()`. \
+On peut voir aussi que nous avons 2 mallocs et un `strcpy()` (pas de `n` donc pas protéger).
 
 ### Solution :
-Nous devons donc arriver a ecrire sur le pointeur de v4 pour pouvoir jump sur la fonction `n()`. \
-Pour se faire on vas overflow le premier malloc pour pouvoir ecrire sur *v4. \
-On ecrit donc 72 octets random puis l'adresse de `n()` en inverser.
+Nous devons donc arriver à écrire sur le pointeur de v4 pour pouvoir jump sur la fonction `n()`. \
+Pour ce faire, on va overflow le premier malloc pour pouvoir écrire sur *v4. \
+On écrit donc 72 octets random puis l'adresse de `n()` en inverser.
 
 On fait la commande suivante pour obtenir le flag :
 ```sh

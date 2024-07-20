@@ -1,12 +1,12 @@
 # Rapport CTF - [Level05]
 
 ### Observation :
-En arrivant sur le level4 on trouve un executable nommé level5.\
-Quand nous essayons de le lancer avec un argument le programme nous renvois juste notre propre chaine de caractere puis se ferme, comme sur le level precedant. \
+En arrivant sur le level5 on trouve un exécutable nommé level5.\
+Quand nous essayons de le lancer avec un argument le programme nous renvois juste notre propre chaîne de caractère puis se ferme, comme sur le level précédant. \
 Regardons donc avec gdb ou un decompilateur.
 
 ### Explication de Code :
-En lancant le binaire dans hex-ray ou ghidra nous obtenons :
+En lançant le binaire dans hex-ray ou ghidra nous obtenons :
 ```c
 //----- (080484A4) --------------------------------------------------------
 void __noreturn o()
@@ -32,16 +32,16 @@ int __cdecl __noreturn main(int argc, const char **argv, const char **envp)
   n();
 }
 ```
-Nous pouvons voir une fonction non utiliser `o()` qui nous permet d'acceder a un shell. \
-Probablement modifier la stack de printf pour changer son addresse de retour vu que nous n'avons pas d'insttuction de retour dans les autres fonctions (ca va etre fastidieux). \
-Appel a fonction `exit` et fonction `_exit`
+Nous pouvons voir une fonction non utiliser `o()` qui nous permet d'accéder a un shell. \
+Probablement modifier la stack de printf pour changer son adresse de retour vu que nous n'avons pas d'instruction de retour dans les autres fonctions (ça va être fastidieux.). \
+Appel à fonction `exit` et fonction `_exit`
 
 
 ### Solution :
-Il nous faut modifier l'operation de saut de la fonction d'appel cour `exit` pour pointer vers la fonction `o()`. \
-La premiere ligne de la fonction ressemble a ca : `(jmp *0x8049838)`. \
-Je vais modifier l'addresse a laquelle l'operation jmp va dans la memoire pour pointer vers l'addresse de la fonction `o()` = `080484A4` en inverser vu que nous sommes en small endian. \
-Il nous faut donc ecrire 164 octets pour le premier octet de notre return `(A4 = 164)`, ensuite 0x84 etant plus petit que 0xA4 il nous faut ecrire 4bits suplementaire donc `(484 = 1156)`, puis `(804 = 2052)`.
+Il nous faut modifier l'opération de saut de la fonction d'appel cour `exit` pour pointer vers la fonction `o()`. \
+La première ligne de la fonction ressemble à ça : `(jmp *0x8049838)`. \
+Je vais modifier l'adresse a laquelle l'opération jmp va dans la mémoire pour pointer vers l'adresse de la fonction `o()` = `080484A4` en inverser vu que nous sommes en small endian. \
+Il nous faut donc écrire 164 octets pour le premier octet de notre return  `(A4 = 164)`, ensuite 0x84 étants plus petit que 0xA4 il nous faut écrire 4bits supplémentaire donc `(484 = 1156)`, puis `(804 = 2052)`.
 
 On fait la commande suivante pour obtenir le flag :
 ```sh

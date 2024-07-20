@@ -1,12 +1,12 @@
 # Rapport CTF - [Level07]
 
 ### Observation :
-En arrivant sur le level7 on trouve un executable nommé level7.\
-Quand nous essayons de le lancer on se rend compte qu'il prend 2 arguments et ecrit `~~`, puis return. \
+En arrivant sur le level7 on trouve un exécutable nommé level7.\
+Quand nous essayons de le lancer, on se rend compte qu'il prend 2 arguments et écris `~~`, puis return. \
 Regardons donc avec gdb ou un decompilateur.
 
 ### Explication de Code :
-En lancant le binaire dans hex-ray ou ghidra nous obtenons :
+En lançant le binaire dans hex-ray ou ghidra nous obtenons :
 ```c
 //----- (080484F4) --------------------------------------------------------
 int m()
@@ -38,11 +38,11 @@ int __cdecl main(int argc, const char **argv, const char **envp)
   return 0;
 }
 ```
-On peux voir le file v3 qui open le .pass du level suivant, et une fonction `m()` qui nous permet de printf v3. \
-On peux aussi voir des malloc comme dans le level precedant, nous allons donc surment devoir faire de meme.
+On peut voir le file v3 qui open le .pass du level suivant, et une fonction `m()` qui nous permet de printf v3. \
+On peut aussi voir des malloc comme dans le level précédant, nous allons donc sûrement devoir faire de même.
 
 ### Solution :
-Il nous faut donc overflow le premier malloc `v6` sur `v5` avec 20 octets random 16 pour le malloc + 4 pour v5, puis ajouter l'adresse jump de puts (pour jump sur `m()`), ensuite dans la 2eme chaine de caractere nous n'avons plus qu'a mettre l'adresse de notre fonction `m()`.
+Il nous faut donc overflow le premier malloc `v6` sur `v5` avec 20 octets random 16 pour le malloc + 4 pour v5, puis ajouter l'adresse jump de puts (pour jump sur `m()`), ensuite dans la 2eme chaîne de caractère nous n'avons plus qu'à mettre l'adresse de notre fonction `m()`.
 
 On fait la commande suivante pour obtenir le flag :
 ```sh

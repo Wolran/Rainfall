@@ -1,12 +1,12 @@
 # Rapport CTF - [Level08]
 
 ### Observation :
-En arrivant sur le level8 on trouve un executable nommé level8.\
-Quand nous essayons de le lancer, et nous obtenons une chaine de caractere `(nil), (nil)` qui se repete des que l'on fini une string. \
+En arrivant sur le level8 on trouve un exécutable nommé level8.\
+Quand nous essayons de le lancer, et nous obtenons une chaîne de caractère `(nil), (nil)` qui se répète dès que l'on fini une string. \
 Regardons donc avec gdb ou un decompilateur.
 
 ### Explication de Code :
-En lancant le binaire dans hex-ray ou ghidra nous obtenons :
+En lançant le binaire dans hex-ray ou ghidra nous obtenons :
 ```c
 int __cdecl main(int argc, const char **argv, const char **envp)
 {
@@ -41,14 +41,14 @@ int __cdecl main(int argc, const char **argv, const char **envp)
   return 0;
 }
 ```
-Ok que nous donne ce code:
-- si on fait `"auth "` on malloc 4octets.
+Ok, que nous donne ce code:
+- si on fait `"auth "` on malloc 4 octets.
 - si on fait `"reset"` on free auth.
-- si on fait `"servic"` (uniquement 6 a comparer) on malloc `v6 = 128`.
-- si on fait `"login"` on regarde si auth + 8 n'est pas vide pour `/bin/sh`, sinon on ecrit `"Password:\n"` .
+- si on fait `"servic"` (uniquement, 6 a comparé.) on malloc `v6 = 128`.
+- si on fait `"login"` on regarde si auth + 8 n'est pas vide pour `/bin/sh`, sinon cela écrit `"Password:\n"` .
 
 ### Solution :
-Le but est donc de creer `auth` puis mettre de la memoire a auth+8 avec `servic` puis essayer de `login` pour avoir acces a un shell.
+Le but est donc de créer `auth` puis mettre de la mémoire a auth+8 avec `servic` puis essayer de `login` pour avoir accès a un shell.
 
 On fait la commande suivante pour obtenir le flag :
 ```sh

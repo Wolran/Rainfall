@@ -1,50 +1,50 @@
 # Rapport CTF - [Level04]
 
 ### Observation :
-En arrivant sur le level4 on trouve un executable nommé level4.\
-Quand nous essayons de le lancer avec un argument le programme nous renvois juste notre propre chaine de caractere puis se ferme, comme sur le level precedant. \
+En arrivant sur le level4 on trouve un exécutable nommé level4.\
+Quand nous essayons de le lancer avec un argument le programme nous renvois juste notre propre chaîne de caractère puis se ferme, comme sur le level précédant. \
 Regardons donc avec gdb ou un decompilateur.
 
 
 ### Explication de Code :
-En lancant le binaire dans hex-ray ou ghidra nous obtenons :
+En lançant le binaire dans hex-ray ou ghidra nous obtenons :
 ```c
 //----- (08048444) --------------------------------------------------------
 int __cdecl p(char *format)
 {
-  return printf(format);
+return printf(format);
 }
 
 //----- (08048457) --------------------------------------------------------
 int n()
 {
-  int result; // eax
-  char s[520]; // [esp+10h] [ebp-208h] BYREF
+int result; // eax
+char s[520]; // [esp+10h] [ebp-208h] BYREF
 
-  fgets(s, 512, stdin);
-  p(s);
-  result = m;
-  if ( m == 16930116 )
-    return system("/bin/cat /home/user/level5/.pass");
-  return result;
+fgets(s, 512, stdin);
+p(s);
+result = m;
+if ( m == 16930116 )
+return system("/bin/cat /home/user/level5/.pass");
+return result;
 }
 // 8049810: using guessed type int m;
 
 //----- (080484A7) --------------------------------------------------------
 int __cdecl main(int argc, const char **argv, const char **envp)
 {
-  return n();
+return n();
 }
 ```
-Ce level est pareil que le dernier a quelque petit details:
+Ce level est pareil que le dernier a quelque petit détails:
 - Le printf est dans une autre fonction.
-- `m` dois maintenant etre egal a `16930116`.
+- `m` dois maintenant être égal a `16930116`.
 
 
 ### Solution :
-Le principe reste le meme, mais il nous faut ecrire plus d'adresse pour decaler plus la memoire, 11 en l'ocurrence, et il nous faut ecrire plus, `16930116` octets. \
-Le probleme etant que nous ne pouvons ecrire que 512 caracteres, limite imposer par la fonction `fgets()` \
-Pour regler ce probleme nous allons demander a printf d'ecrire beaucoup de caracteres grace au `%x` il nous faut juste prendre notre chiffre de base `16930116` et le diviser par 11 `%x` et ajouter un dernier `%x` modulo de `16930116` - 4 pour notre adresse de `m`; 
+Le principe reste le meme, mais il nous faut écrire plus d'adresse pour reussir a decaler plus la memoire, en l'occurrence `11` fois, ainci que `16930116` octets suplementaire. \
+Le probleme etant que nous ne pouvons écrire que 512 caracteres, limite imposer par la fonction `fgets()` \
+Pour regler ce probleme nous allons demander a printf d'écrire beaucoup de caracteres grace au `%x` il nous faut juste prendre notre chiffre de base `16930116` et le diviser par 11 `%x` et ajouter un dernier `%x` modulo de `16930116` - 4 pour notre adresse de `m`; 
 
 On fait la commande suivante pour obtenir le flag :
 ```sh
