@@ -47,23 +47,28 @@ Résolution:
 ----
 Pour trouver une valeur de `v5` qui une fois multipliée par **4** déborde suffisament pour tomber sur le nombre 44. \
 Nous devons viser la valeur **11**, mais nous devons aussi entrer un chiffre négatif pour pouvoir passer la première condition. \
-Multiplier par **4** reviens a déplacer un nombre de **2** bits vers la gauche. \
-Nous pouvons donc écrire le nombre **11** en binaire et mettre le bit le plus grand a **1** pour le transformer en nombre négatif. \
-À vrai dire nous pouvons deplus ajouter le bit juste en dessous à **1** vu que la multiplications par **4** reviens à enlever les **2** bits de gauche.\
+Multiplier par **4** reviens a déplacer un nombre de **2** bits vers la gauche tout en perdant les informations qui débordes. \
+Car une fois une analyse du programme plus approfondie en asembleur on peut voir qu'un simple décalage d'adresse est effectué dans la mémoire.
+
+> Cette ligne cause le décalage de bits: '0x8048453 <main+47>     lea    0x0(,%eax,4),%ecx'
+
+Nous pouvons donc écrire le nombre **11** en binaire et mettre le bit le plus grand à **1** pour le transformer en nombre négatif. \
+À vrai dire nous pouvons de plus ajouter le bit juste en dessous à **1** vu que la multiplications par **4** reviens à enlever les **2** bits de gauche.\
 Les solutions ce trouvant êtres **-1073741813** ou **-2147483637** :
 | décimal | binaire |
 | ------: | ------: |
-|	      11	| 00000000000000000000000000001011
-|-2147483637	| 10000000000000000000000000001011
-|-1073741813	| 11000000000000000000000000001011
+|	      11	| 00000000 00000000 00000000 00001011
+|-2147483637	| 10000000 00000000 00000000 00001011
+|-1073741813	| 11000000 00000000 00000000 00001011
 
-Il ne me reste plus qu'a remplir le buffer de **40** octets aléatoires puis de la valeur de `v5` voulue en hexadécimal et little endiane, \
-pour écraser la valeur de `v5` avec mon dépassement de tableau puis de rajouter la commande pour afficher la clef de l'utilisateur supérieur.
+Il ne me reste plus qu'a remplir le buffer de **40** octets aléatoires puis de la valeur de `v5` voulue en hexadécimal et little endiane, ce qui écrasera \
+la valeur de `v5` par dépassement de tableau puis ensuite d'ajouter la commande pour afficher la clef de l'utilisateur supérieur.
 
 #### Commandes:
 ```bash
 ./bonus1 -2147483637 $(python -c "print('a'*40 +'\x57\x4f\x4c\x46'[::-1])") <<<'cat /home/user/bonus2/.pass'
 ```
+ou
 ```bash
 ./bonus1 -1073741813 $(python -c "print('a'*40 +'\x57\x4f\x4c\x46'[::-1])") <<<'cat /home/user/bonus2/.pass'
 ```

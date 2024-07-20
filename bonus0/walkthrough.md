@@ -54,7 +54,7 @@ int main(int argc, const char **argv, const char **envp)
 #### Conclusions:
 Même si les fonctions de lectures et de copies parraissent sécurisées aux premier abord, nous pouvons terminer les chaînes de \
 caractères par autre chose que zéro. Les deux tableaux étant côte à côte dans la pile, l'appel à `<strcat>` copiera `dest` et `v3` avec `v3`.\
-Copiant ainsi jusqu'à **61** caractères permettant ainsi d'écraser l'addresse de retour de la fonction `<main>` qui a une pile de **64** octets. \
+Copiant ainsi jusqu'à **61** caractères permettant ainsi d'écraser l'adresse de retour de la fonction `<main>` qui a une pile de **64** octets. \
 Nous pouvons ainsi rediriger l'ordre d'exécution du programme.
 
 
@@ -63,13 +63,13 @@ Résolution:
 ----
 Nous allons remplir le tableau de la première chaîne avec **20** caractères aléatoires. \
 Ensuite nous injectons une fonction en shellcode suivis de caractères de bourrages pour compléter l'appel à `<read>` de **4096** octets. \
-Nous finissons par remplir partiellement le buffer de read avec **14** octets aléatoire suivis de l'addresse du buffer de `<read>` préalablement récupéré grace a gdb. \
-Puis nous rajoutons un octet de bourrage pour décaler correctement la position de l'addresse de retour du à l'ajout d'un espace au tableau `dest` dans la fonction `<pp>`.
+Nous finissons par remplir partiellement le buffer de read avec **14** octets aléatoire suivis de l'adresse du buffer de `<read>` préalablement récupéré grace a gdb. \
+Puis nous rajoutons un octet de bourrage pour décaler correctement la position de l'adresse de retour du à l'ajout d'un espace au tableau `dest` dans la fonction `<pp>`.
 
 
 #### Injection:
 ```asm
-# La fonction injectée appelle system avec '/bin/sh' en paramètre:
+# La fonction injectée appelle <system> avec '/bin/sh' en paramètre:
 
 0:  6a 0b                   	push   0xb
 2:  58                      	pop    eax

