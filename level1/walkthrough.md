@@ -7,7 +7,7 @@ Regardons donc avec gdb ou un decompilateur.
 
 
 ### Explication de Code :
-En lancant le binaire dans hex-ray ou ghidra nous obtenons :
+En lançant le binaire dans hex-ray ou ghidra nous obtenons :
 ```c
 //----- (08048444) --------------------------------------------------------
 int run()

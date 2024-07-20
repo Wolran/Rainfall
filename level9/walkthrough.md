@@ -43,7 +43,7 @@ int __cdecl main(int argc, const char **argv, const char **envp)
 }
 ```
 Nous pouvons voir que c'est un code en cpp, qui new (malloc). \
-Il n'y a pas de protection sur l'entrer de notre arv[1]. \
+Il n'y a pas de protection sur l'entrée de notre arv[1]. \
 Nous pouvons donc injecter du code. 
 #### Regardons l'asm:
 

@@ -7,7 +7,7 @@ Regardons donc avec gdb ou un décompilateur.
 
 
 ### Explication de Code :
-En lancant le binaire dans hex-ray ou ghidra nous obtenons :
+En lançant le binaire dans hex-ray ou ghidra nous obtenons :
 ```c
 int __cdecl main(int argc, const char **argv, const char **envp)
 {
