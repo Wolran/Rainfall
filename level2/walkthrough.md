@@ -38,15 +38,19 @@ Nous pouvons voir plusieurs chose :
 - Le programme lance la fonction `p()`.
 - La fonction `p()` écrits dans un buffer `s[64]` votre string.
 - Ensuite la fonction `p()` test si votre adresse de retour est dans la stack, si elle l'est, alors la fonction printf l'adresse de retour puis exit.
-- Sinon la fonction print avec `puts()` votre entrée puis renvois l'adresse de la chaîne malloc de strdup.
+- Sinon la fonction print avec `puts()` votre entrée puis renvois l'adresse de la chaîne malloc par strdup.
 
 
 ### Solution :
 
 Nous devons donc injecter un **SHELLCODE** pour pouvoir return sur notre propre code et l'exécuter. \
-On crée donc un **shellcode** et on le met au début de notre chaîne pour qu'il soit exécuté. \ 
+On crée donc un **shellcode** et on le met au début de notre chaîne pour qu'il soit exécuté. \
 Nous voulons écrire l'adresse de notre shellcode a `(s) + (void*)` = `64 + 16` octets. \
 On écrit donc notre **shellcode** au début (24 octets) ensuite des octets random pour arriver a (64  + 16 - 24), ensuite nous pouvons écrire notre adresse de retour.
+
+> Nous allons sauter à l'adresse de retour de strdup qui est dans la heap pour passer la condition.
+
+> Le shellcode ne dois pas contenir de 0 sinon strdup ne pourras pas le copier entierement.
 
 On fait la commande suivante pour obtenir le flag :
 ```sh

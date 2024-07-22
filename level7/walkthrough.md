@@ -38,11 +38,11 @@ int __cdecl main(int argc, const char **argv, const char **envp)
   return 0;
 }
 ```
-On peut voir le file v3 qui open le .pass du level suivant, et une fonction `m()` qui nous permet de printf v3. \
+On peut voir le fichier v3 qui open le `.pass` du level suivant, et une fonction `m()` qui nous permet de printf v3. \
 On peut aussi voir des malloc comme dans le level précédant, nous allons donc sûrement devoir faire de même.
 
 ### Solution :
-Il nous faut donc overflow le premier malloc `v6` sur `v5` avec 20 octets random 16 pour le malloc + 4 pour v5, puis ajouter l'adresse jump de puts (pour jump sur `m()`), ensuite dans la 2eme chaîne de caractère nous n'avons plus qu'à mettre l'adresse de notre fonction `m()`.
+Il nous faut donc overflow le premier malloc `v6` sur `v5` avec 20 octets random 16 pour le malloc + 4 pour v5, puis ajouter l'adresse jump de puts (pour jump sur `m()`), ensuite dans la 2eme chaîne de caractères nous n'avons plus qu'à mettre l'adresse de fonction `m()`.
 
 On fait la commande suivante pour obtenir le flag :
 ```sh

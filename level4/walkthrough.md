@@ -42,9 +42,9 @@ Ce level est pareil que le dernier a quelque petit détails:
 
 
 ### Solution :
-Le principe reste le meme, mais il nous faut écrire plus d'adresse pour reussir a decaler plus la memoire, en l'occurrence `11` fois, ainci que `16930116` octets suplementaire. \
-Le probleme etant que nous ne pouvons écrire que 512 caracteres, limite imposer par la fonction `fgets()` \
-Pour regler ce probleme nous allons demander a printf d'écrire beaucoup de caracteres grace au `%x` il nous faut juste prendre notre chiffre de base `16930116` et le diviser par 11 `%x` et ajouter un dernier `%x` modulo de `16930116` - 4 pour notre adresse de `m`; 
+Le principe reste le même, mais il nous faut écrire plus d'adresse pour réussir à décaler plus la memoire, en l'occurrence `11` fois, ainsi que `16930116` octets suplémentaire. \
+Le problème étant que nous ne pouvons écrire que 512 caractères, limite imposée par la fonction `fgets()` \
+Pour régler ce problème nous allons demander à printf d'écrire beaucoup de caractères grace au `%x` il nous faut juste prendre notre chiffre de base `16930116` et le diviser par 11 `%x` et ajouter un dernier `%x` modulo de `16930116` - 4 pour notre adresse de `m`, puis le `%n` pour modifier la valeur à l'adresse mémoire voulue.
 
 On fait la commande suivante pour obtenir le flag :
 ```sh

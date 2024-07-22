@@ -34,8 +34,8 @@ int __cdecl main(int argc, const char **argv, const char **envp)
 }
 ```
 On peut voir une fonction `n()` qui permet de cat le mot de passe du prochain level
-Le but est donc d'arriver a jump sur la fonction `n()`. \
-On peut voir aussi que nous avons 2 mallocs et un `strcpy()` (pas de `n` donc pas protéger).
+Le but est donc d'arriver à jump sur la fonction `n()`. \
+On peut voir aussi que nous avons 2 mallocs et un `strcpy()` (pas de `n` donc pas protégé).
 
 ### Solution :
 Nous devons donc arriver à écrire sur le pointeur de v4 pour pouvoir jump sur la fonction `n()`. \

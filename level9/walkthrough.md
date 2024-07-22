@@ -96,16 +96,16 @@ Dump of assembler code for function main:
    0x08048698 <+164>:	leave  
    0x08048699 <+165>:	ret   
 ```
-On peut voir à partir de la ligne 136 que eax vas être mov dans edx qui vas exécuter sa valeur dereferencer.
+On peut voir à partir de la ligne 136 que eax vas être mov dans edx qui vas exécuter sa valeur déréférencé.
 
 
 ### Solution :
-Il nous faut donc overflow notre malloc (new) de `108` octets pour mettre une valeur de retour avec l'adresse de notre arv[1]. \
+Il nous faut donc overflow notre malloc (new) de `108` octets pour changer l'adresse de la fonction exécutée par le contenu de notre shellcode. \
 On injecte donc notre code: 
-- Notre adresse de `arv[1] + 4` pour le dereferancement
-- Notre `SHELLCODE` (en locurance 24 caracteres)
-- Des octets random jusqu'a atteindre `108` pour pouvoir overflow, donc `108 - 4 - 24`
-- Et enfin l'adresse de notre arv[1] pour qu'il puisse la déréférencer et arriver sur notre shellcode.
+- Notre adresse de `arv[1] + 4` pour le déréférencement
+- Notre `SHELLCODE` (en l'ocurrence 24 caractères)
+- Des octets random jusqu'à atteindre `108` pour pouvoir overflow, donc `108 - 4 - 24`
+- Et enfin l'adresse de notre arv[1] pour qu'il puisse le déréférencer et arriver sur notre shellcode.
 
 On fait la commande suivante pour obtenir le flag :
 ```sh
