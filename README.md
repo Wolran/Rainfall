@@ -1,1 +1,1 @@
-<p align="center"><img width=4000 src=".media/hehe.gif"></p>
+This project explores security vulnerabilities related to buffer overflows and code injections. 
